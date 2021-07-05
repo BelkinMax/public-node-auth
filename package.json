@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/BelkinMax/simple_auth#readme",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^5.13.2",
     "nodemon": "^2.0.9"
