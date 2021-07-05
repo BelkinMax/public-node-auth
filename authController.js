@@ -8,13 +8,27 @@ class AuthController {
   async registration(req, res) {
     try {
       const { username, password } = req.body;
-      const candidate = await User.findOne({ username });
+
+      // Validate
+      if (username.trim().length <= 3) {
+        return res
+          .status(400)
+          .json({ message: 'Username must be longer than 3 characters!' });
+      }
+
+      if (password.trim().length <= 5) {
+        return res
+          .status(400)
+          .json({ message: 'Password must be longer than 5 characters!' });
+      }
 
       // Try find in ddbb. Return if already exists
+      const candidate = await User.findOne({ username });
+
       if (candidate) {
         return res
           .status(400)
-          .json({ message: `\"${username}\" is already exists!` });
+          .json({ message: `Username ${username} is already exists!` });
       }
 
       // Get role
@@ -35,7 +49,7 @@ class AuthController {
       return res.json({ message: 'Registration completed successfully!' });
     } catch (e) {
       console.error(e);
-      res.status(400).json({ message: 'Registrations error!' });
+      res.status(400).json({ message: 'Registration error!' });
     }
   }
   async login(req, res) {
