@@ -7,7 +7,7 @@ const Role = require('./models/Role');
 class AuthController {
   async registration(req, res) {
     try {
-      const { username, password } = res.body;
+      const { username, password } = req.body;
       const candidate = await User.findOne({ username });
 
       // Try find in ddbb. Return if already exists
