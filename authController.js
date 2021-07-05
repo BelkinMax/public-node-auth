@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 
+const { validationResult } = require('express-validator');
+
 const User = require('./models/User');
 
 const Role = require('./models/Role');
@@ -7,20 +9,15 @@ const Role = require('./models/Role');
 class AuthController {
   async registration(req, res) {
     try {
+      const validationErrors = validationResult(req);
+
+      if (!validationErrors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ message: 'Validation error!', validationErrors });
+      }
+
       const { username, password } = req.body;
-
-      // Validate
-      if (username.trim().length <= 3) {
-        return res
-          .status(400)
-          .json({ message: 'Username must be longer than 3 characters!' });
-      }
-
-      if (password.trim().length <= 5) {
-        return res
-          .status(400)
-          .json({ message: 'Password must be longer than 5 characters!' });
-      }
 
       // Try find in ddbb. Return if already exists
       const candidate = await User.findOne({ username });
